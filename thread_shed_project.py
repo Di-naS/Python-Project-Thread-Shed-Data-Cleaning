@@ -107,58 +107,48 @@ green&white;,;09/15/17,   Gail Phelps   ;,;$30.52
 
 #------------------------------------------------
 # Start coding below!
-daily_sales_replaced = daily_sales.replace(';,;', ':')
+daily_sales_replaced = daily_sales.replace(';,;', '_')
 daily_transactions = daily_sales_replaced.split(',')
-
-daily_transactions_split =[]
-for each in daily_transactions:
-  daily_transactions_split.append(each.split(':'))
+#print(daily_transactions)
+daily_transactions_split = [i.split('_') for i in daily_transactions]
 
 transactions_clean = []
-for each in daily_transactions_split:
-  transaction_clean = []
-  for point in each:
-    transaction_clean.append(point.replace('\n','').strip('  '))
-  transactions_clean.append(transaction_clean)
+for i in daily_transactions_split:
+  new_list = []
+  for j in i:
+    new_list.append(j.strip())
+  transactions_clean.append(new_list)
+
 #print(transactions_clean)
-customers = []
-sales = []
-thread_sold = []
-
-for i in range(len(transactions_clean)):
-  customers.append(transactions_clean[i][0])
-  sales.append(transactions_clean[i][1])
-  thread_sold.append(transactions_clean[i][2])
-#print(customers)
-#print(sales)
-#print(thread_sold)
+customers = [i[0] for i in transactions_clean]
+sales = [i[1] for i in transactions_clean]
+thread_sold = [i[2] for i in transactions_clean]
+#print(customers, sales, thread_sold)
 total_sales = 0
-for each in sales:
-  total_sales += float(each.strip('$'))
-print(total_sales)
-#print(thread_sold)
+
+for i in sales:
+  total_sales += float(i.strip('$'))
+total_sales = round(total_sales, 2)
+
 thread_sold_split = []
-for each in thread_sold:
-  for thread in each.split('&'):
-    thread_sold_split.append(thread)
-#print(thread_sold_split)   
+
+for i in thread_sold:
+  if "&" not in i: 
+    thread_sold_split.append(i)
+  else:
+     j = i.split('&')
+     for n in j:
+      thread_sold_split.append(n)
+
 def color_count(color):
-  count = 0
-  for each in thread_sold_split:
-    if color == each:
-      count += 1
-  return count
-print(color_count('white')) 
-colors = ['red','yellow','green','white','black','blue','purple']   
-for each in colors:
-  print('Color of {color} was sold {count} times today'.format(color = each, count =color_count(each)))
-  
-  
-  
-  
-  
-    
-    
-    
+  counter = 0
+  for i in thread_sold_split:
+    if i == color:
+      counter += 1
+  return counter
+colors = ['red','yellow','green','white','black','blue','purple']
+for i in colors:
+  print(f"{color_count(i)} threads of {i} color were sold today")
+      
 
-
+    
